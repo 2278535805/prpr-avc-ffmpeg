@@ -13,6 +13,7 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=x86_64-linux"]
 
 [[targets]]
 name = "x86_64-unknown-linux-musl"
@@ -28,6 +29,7 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=x86_64-linux"]
 
 [[targets]]
 name = "aarch64-apple-darwin"
@@ -37,6 +39,7 @@ env = { CC = "clang", CXX = "clang++" }
 configure = ["--arch=arm64", "--target-os=darwin"]
 extra_cflags = "-arch arm64"
 extra_ldflags = "-arch arm64"
+x264_configure = ["--host=aarch64-apple-darwin"]
 
 [[targets]]
 name = "aarch64-apple-ios"
@@ -56,6 +59,7 @@ configure = [
 extra_configure = ["--disable-videotoolbox", "--sysroot=${IOS_SDK}"]
 extra_cflags = "-isysroot ${IOS_SDK} -miphoneos-version-min=9.0"
 extra_ldflags = "-isysroot ${IOS_SDK} -miphoneos-version-min=9.0"
+x264_configure = ["--host=aarch64-apple-darwin"]
 
 [[targets]]
 name = "aarch64-apple-ios-sim"
@@ -76,6 +80,7 @@ configure = [
 extra_configure = ["--disable-videotoolbox", "--sysroot=${IOS_SIM_SDK}"]
 extra_cflags = "-isysroot ${IOS_SIM_SDK} -mios-simulator-version-min=9.0"
 extra_ldflags = "-isysroot ${IOS_SIM_SDK} -mios-simulator-version-min=9.0"
+x264_configure = ["--host=aarch64-apple-darwin"]
 
 [[targets]]
 name = "aarch64-unknown-linux-ohos"
@@ -103,6 +108,7 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=aarch64-linux"]
 
 [[targets]]
 name = "x86_64-pc-windows-gnu"
@@ -117,6 +123,7 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=x86_64-w64-mingw32", "--cross-prefix=x86_64-w64-mingw32-"]
 
 [[targets]]
 name = "aarch64-pc-windows-gnullvm"
@@ -131,6 +138,7 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=aarch64-w64-mingw32", "--cross-prefix=aarch64-w64-mingw32-"]
 
 [[targets]]
 name = "x86_64-pc-windows-msvc"
@@ -140,6 +148,7 @@ note = "Requires MSVC toolchain and FFmpeg msvc flags."
 configure = ["--arch=x86_64", "--target-os=win64", "--toolchain=msvc"]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=x86_64-pc-msys"]
 
 [[targets]]
 name = "aarch64-pc-windows-msvc"
@@ -154,6 +163,7 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=aarch64-pc-msys"]
 
 [[targets]]
 name = "aarch64-linux-android"
@@ -171,6 +181,7 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=aarch64-linux-android"]
 
 [[targets]]
 name = "armv7-linux-androideabi"
@@ -188,3 +199,4 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=arm-linux-androideabi"]

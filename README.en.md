@@ -10,6 +10,7 @@ FFmpeg source is pinned as the `FFmpeg/` git submodule, and CI checks it out aut
 
 - Multi-target builds (targets use Rust-style triples)
 - Per-target `./configure` flags, compiler setup, and optimizations
+- Pinned x264 builds statically linked into the FFmpeg artifacts
 - CI matrix builds for each target
 - Unified `{target}.tar.gz` artifacts uploaded to Release
 
@@ -37,6 +38,7 @@ Artifacts are written to `dist/<target>.tar.gz`.
 Default layout is a flat list of static libraries (`package_layout = "flat"`):
 
 - `libavcodec.a`
+- `libx264.a`
 - `libavformat.a`
 - `libavutil.a`
 - `libswresample.a`
