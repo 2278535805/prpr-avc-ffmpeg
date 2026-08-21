@@ -127,6 +127,11 @@ def main() -> int:
         elif flag.startswith("--ranlib="):
             env["RANLIB"] = flag.removeprefix("--ranlib=")
 
+    # x264 uses NASM/YASM for x86 assembly. The FFmpeg target settings may set
+    # AS to GNU `as`, which x264 cannot use for its x86 assembly sources.
+    if target_name.startswith(("x86_", "i686-")):
+        env["AS"] = "nasm"
+
     common_flags = expand_list(ffmpeg_cfg.get("configure_common", []), env)
     extra_flags = expand_list(target_cfg.get("extra_configure", []), env)
     
