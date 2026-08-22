@@ -201,5 +201,5 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
-x264_configure = ["--host=arm-linux-androideabi", "--enable-pic"]
+x264_configure = ["--host=arm-linux-androideabi", "--enable-pic", "--extra-cflags=-D_FILE_OFFSET_BITS=64"]
 env = { STRIP = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" }
