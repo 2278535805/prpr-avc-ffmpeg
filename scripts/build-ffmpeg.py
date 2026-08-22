@@ -72,6 +72,21 @@ def prepare_source_dir(source_dir: Path, dest_dir: Path) -> Path:
     return dest_dir
 
 
+def resolve_package_lib(install_dir: Path, x264_install_dir: Path, lib_name: str) -> Path:
+    names = [lib_name]
+    if lib_name.endswith(".a"):
+        names.append(lib_name[:-2] + ".lib")
+    search_dirs = [install_dir]
+    if lib_name.startswith("libx264"):
+        search_dirs.insert(0, x264_install_dir)
+    for directory in search_dirs:
+        for name in names:
+            candidate = directory / "lib" / name
+            if candidate.exists():
+                return candidate
+    raise SystemExit(f"missing library: {search_dirs[-1] / 'lib' / lib_name}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Build FFmpeg static libs for a target"
@@ -201,13 +216,11 @@ def main() -> int:
     layout = ffmpeg_cfg.get("package_layout", "flat")
     with tarfile.open(tar_output, "w:gz") as tar:
         for lib_name in package_libs:
-            lib_path = (x264_install_dir if lib_name == "libx264.a" else install_dir) / "lib" / lib_name
-            if not lib_path.exists():
-                raise SystemExit(f"missing library: {lib_path}")
+            lib_path = resolve_package_lib(install_dir, x264_install_dir, lib_name)
             if layout == "flat":
-                arcname = lib_name
+                arcname = lib_path.name
             elif layout == "target-dir":
-                arcname = f"{target_name}/{lib_name}"
+                arcname = f"{target_name}/{lib_path.name}"
             else:
                 raise SystemExit(f"unknown package_layout: {layout}")
             tar.add(lib_path, arcname=arcname)

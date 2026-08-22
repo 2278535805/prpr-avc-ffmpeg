@@ -147,6 +147,7 @@ os = "windows-latest"
 enabled = true
 note = "Requires MSVC toolchain and FFmpeg msvc flags."
 configure = ["--arch=x86_64", "--target-os=win64", "--toolchain=msvc"]
+env = { CC = "cl", CXX = "cl" }
 extra_cflags = ""
 extra_ldflags = ""
 x264_configure = ["--host=x86_64-pc-msys"]
@@ -162,6 +163,7 @@ configure = [
   "--toolchain=msvc",
   "--enable-cross-compile",
 ]
+env = { CC = "cl", CXX = "cl" }
 extra_cflags = ""
 extra_ldflags = ""
 x264_configure = ["--host=aarch64-pc-msys"]
