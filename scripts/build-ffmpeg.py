@@ -169,9 +169,12 @@ def main() -> int:
     ]
     if os.name == "nt":
         x264_cmd = ["sh", *x264_cmd]
-    run(x264_cmd, cwd=x264_dir, env=env)
-    run(["make", f"-j{jobs}"], cwd=x264_dir, env=env)
-    run(["make", "install"], cwd=x264_dir, env=env)
+    x264_env = env.copy()
+    # x264 selects NASM by default; FFmpeg targets may set AS to GNU as.
+    x264_env.pop("AS", None)
+    run(x264_cmd, cwd=x264_dir, env=x264_env)
+    run(["make", f"-j{jobs}"], cwd=x264_dir, env=x264_env)
+    run(["make", "install"], cwd=x264_dir, env=x264_env)
 
     pkgconfig_dir = x264_install_dir / "lib" / "pkgconfig"
     env["PKG_CONFIG_PATH"] = os.pathsep.join(filter(None, [str(pkgconfig_dir), env.get("PKG_CONFIG_PATH", "")]))
