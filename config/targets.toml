@@ -108,7 +108,7 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
-x264_configure = ["--host=aarch64-linux"]
+x264_configure = ["--host=aarch64-linux", "--enable-pic"]
 
 [[targets]]
 name = "x86_64-pc-windows-gnu"
@@ -182,7 +182,8 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
-x264_configure = ["--host=aarch64-linux-android"]
+x264_configure = ["--host=aarch64-linux-android", "--enable-pic"]
+env = { STRIP = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" }
 
 [[targets]]
 name = "armv7-linux-androideabi"
@@ -200,4 +201,5 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
-x264_configure = ["--host=arm-linux-androideabi"]
+x264_configure = ["--host=arm-linux-androideabi", "--enable-pic"]
+env = { STRIP = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" }
