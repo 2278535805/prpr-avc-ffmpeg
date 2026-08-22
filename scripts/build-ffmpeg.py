@@ -22,17 +22,7 @@ def load_toml(path: Path) -> dict:
 
 def run(cmd: list[str], cwd: Path | None = None, env: dict | None = None) -> None:
     print(f"Running: {' '.join(cmd)}")
-    try:
-        subprocess.run(cmd, cwd=cwd, env=env, check=True)
-    except subprocess.CalledProcessError:
-        if cwd is not None:
-            config_log = cwd / "ffbuild" / "config.log"
-            if config_log.is_file():
-                print(f"Configure log: {config_log}")
-                lines = config_log.read_text(errors="replace").splitlines()
-                for line in lines[-80:]:
-                    print(line)
-        raise
+    subprocess.run(cmd, cwd=cwd, env=env, check=True)
 
 
 VAR_PATTERN = re.compile(r"\$\{([^}]+)\}|\$([A-Za-z_][A-Za-z0-9_]*)")
@@ -189,23 +179,7 @@ def main() -> int:
     run(["make", "install"], cwd=x264_dir, env=env)
 
     pkgconfig_dir = x264_install_dir / "lib" / "pkgconfig"
-    x264_include_dir = x264_install_dir / "include"
-    x264_lib_dir = x264_install_dir / "lib"
-    pkgconfig_path = str(pkgconfig_dir)
-    if os.name == "nt":
-        pkgconfig_path = pkgconfig_path.replace("\\", "/")
-    env["PKG_CONFIG_PATH"] = os.pathsep.join(filter(None, [pkgconfig_path, env.get("PKG_CONFIG_PATH", "")]))
-    env["PKG_CONFIG_LIBDIR"] = pkgconfig_path
-    env["PKG_CONFIG_ALLOW_SYSTEM_CFLAGS"] = "1"
-    env["PKG_CONFIG_ALLOW_SYSTEM_LIBS"] = "1"
-    include_path = str(x264_include_dir)
-    lib_path = str(x264_lib_dir)
-    if os.name == "nt":
-        include_path = include_path.replace("\\", "/")
-        lib_path = lib_path.replace("\\", "/")
-    env["CFLAGS"] = f"{env.get('CFLAGS', '')} -I{include_path}".strip()
-    env["LDFLAGS"] = f"{env.get('LDFLAGS', '')} -L{lib_path}".strip()
-    configure_flags.extend([f"--extra-cflags=-I{include_path}", f"--extra-ldflags=-L{lib_path}"])
+    env["PKG_CONFIG_PATH"] = os.pathsep.join(filter(None, [str(pkgconfig_dir), env.get("PKG_CONFIG_PATH", "")]))
 
     configure_cmd = ["./configure", *configure_flags]
     if os.name == "nt":
