@@ -13,6 +13,7 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=x86_64-linux"]
 
 [[targets]]
 name = "x86_64-unknown-linux-musl"
@@ -28,6 +29,7 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=x86_64-linux"]
 
 [[targets]]
 name = "aarch64-apple-darwin"
@@ -37,6 +39,7 @@ env = { CC = "clang", CXX = "clang++" }
 configure = ["--arch=arm64", "--target-os=darwin"]
 extra_cflags = "-arch arm64"
 extra_ldflags = "-arch arm64"
+x264_configure = ["--host=aarch64-apple-darwin"]
 
 [[targets]]
 name = "aarch64-apple-ios"
@@ -56,6 +59,7 @@ configure = [
 extra_configure = ["--disable-videotoolbox", "--sysroot=${IOS_SDK}"]
 extra_cflags = "-isysroot ${IOS_SDK} -miphoneos-version-min=9.0"
 extra_ldflags = "-isysroot ${IOS_SDK} -miphoneos-version-min=9.0"
+x264_configure = ["--host=aarch64-apple-darwin"]
 
 [[targets]]
 name = "aarch64-apple-ios-sim"
@@ -76,13 +80,13 @@ configure = [
 extra_configure = ["--disable-videotoolbox", "--sysroot=${IOS_SIM_SDK}"]
 extra_cflags = "-isysroot ${IOS_SIM_SDK} -mios-simulator-version-min=9.0"
 extra_ldflags = "-isysroot ${IOS_SIM_SDK} -mios-simulator-version-min=9.0"
+x264_configure = ["--host=aarch64-apple-darwin"]
 
 [[targets]]
 name = "aarch64-unknown-linux-ohos"
 os = "ubuntu-latest"
 enabled = true
 note = "Requires OpenHarmony SDK; set OHOS_SDK if not at the default path."
-env = { CPU_MARCH = "armv8-a" }
 configure = [
   "--arch=aarch64",
   "--target-os=linux",
@@ -103,6 +107,14 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = [
+  "--host=aarch64-linux",
+  "--enable-pic",
+  "--disable-asm",
+  "--extra-cflags=--target=aarch64-linux-ohos --sysroot=${OHOS_SDK}/native/sysroot -D__MUSL__ -march=${CPU_MARCH}",
+  "--extra-ldflags=--target=aarch64-linux-ohos --sysroot=${OHOS_SDK}/native/sysroot",
+]
+env = { CPU_MARCH = "armv8-a", STRIP = "${OHOS_SDK}/native/llvm/bin/llvm-strip" }
 
 [[targets]]
 name = "x86_64-pc-windows-gnu"
@@ -114,9 +126,11 @@ configure = [
   "--target-os=mingw64",
   "--enable-cross-compile",
   "--cross-prefix=x86_64-w64-mingw32-",
+  "--pkg-config=pkg-config",
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=x86_64-w64-mingw32", "--cross-prefix=x86_64-w64-mingw32-"]
 
 [[targets]]
 name = "aarch64-pc-windows-gnullvm"
@@ -128,9 +142,11 @@ configure = [
   "--target-os=mingw64",
   "--enable-cross-compile",
   "--cross-prefix=aarch64-w64-mingw32-",
+  "--pkg-config=pkg-config",
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=aarch64-w64-mingw32", "--cross-prefix=aarch64-w64-mingw32-"]
 
 [[targets]]
 name = "x86_64-pc-windows-msvc"
@@ -138,8 +154,10 @@ os = "windows-latest"
 enabled = true
 note = "Requires MSVC toolchain and FFmpeg msvc flags."
 configure = ["--arch=x86_64", "--target-os=win64", "--toolchain=msvc"]
+env = { CC = "cl", CXX = "cl" }
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=x86_64-pc-msys"]
 
 [[targets]]
 name = "aarch64-pc-windows-msvc"
@@ -152,8 +170,10 @@ configure = [
   "--toolchain=msvc",
   "--enable-cross-compile",
 ]
+env = { CC = "cl", CXX = "cl" }
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=aarch64-pc-msys"]
 
 [[targets]]
 name = "aarch64-linux-android"
@@ -171,6 +191,8 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=aarch64-linux-android", "--enable-pic"]
+env = { STRIP = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" }
 
 [[targets]]
 name = "armv7-linux-androideabi"
@@ -188,3 +210,5 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
+x264_configure = ["--host=arm-linux-androideabi", "--enable-pic", "--extra-cflags=-D_FILE_OFFSET_BITS=64"]
+env = { STRIP = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" }

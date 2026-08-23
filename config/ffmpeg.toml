@@ -1,4 +1,5 @@
 source_dir = "FFmpeg"
+x264_source_dir = "x264"
 configure_common = [
   "--disable-bzlib",
   "--disable-debug",
@@ -10,11 +11,13 @@ configure_common = [
   "--disable-hwaccels",
   "--disable-autodetect",
   "--enable-static",
+  "--enable-gpl",
   "--disable-everything",
   "--enable-decoder=h264,hevc,vp9,av1,aac,aac_latm,flac,mp3,wav,vorbis,opus",
-  "--enable-encoder=h264,rawvideo",
+  "--enable-encoder=libx264,aac,rawvideo",
+  "--enable-libx264",
   "--enable-demuxer=h264,hevc,aac,flv,mov,mpegts,flac,wav,mp3,matroska,ogg",
-  "--enable-muxer=h264,adts,rawvideo,flac,mp3,wav,matroska",
+  "--enable-muxer=h264,adts,mp4,mov,rawvideo,flac,mp3,wav,matroska",
   "--enable-parser=h264,hevc,aac,mpegaudio,vp9,opus",
   "--enable-protocol=file,pipe",
   "--enable-bsf=h264_mp4toannexb",
@@ -23,6 +26,7 @@ configure_common = [
   "--enable-filter=scale",
 ]
 package_libs = [
+  "libx264.a",
   "libavcodec.a",
   "libavformat.a",
   "libavutil.a",

@@ -10,6 +10,7 @@ FFmpeg 源码以 git submodule 形式固定在 `FFmpeg/`，CI 会自动拉取对
 
 - 多 target 构建（target 采用 Rust 三元组命名）
 - 按 target 定制 `./configure` 参数、编译器和优化选项
+- 构建 x264，并将 `libx264.a` 链接进 FFmpeg 产物
 - CI 使用 matrix 构建各 target
 - 产物统一打包为 `{target}.tar.gz` 并上传到 Release
 
@@ -37,6 +38,7 @@ python3 scripts/build-ffmpeg.py <target>
 默认布局为单层静态库文件（`package_layout = "flat"`）：
 
 - `libavcodec.a`
+- `libx264.a`
 - `libavformat.a`
 - `libavutil.a`
 - `libswresample.a`
