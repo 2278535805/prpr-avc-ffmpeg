@@ -87,7 +87,6 @@ name = "aarch64-unknown-linux-ohos"
 os = "ubuntu-latest"
 enabled = true
 note = "Requires OpenHarmony SDK; set OHOS_SDK if not at the default path."
-env = { CPU_MARCH = "armv8-a" }
 configure = [
   "--arch=aarch64",
   "--target-os=linux",
@@ -108,7 +107,13 @@ configure = [
 ]
 extra_cflags = ""
 extra_ldflags = ""
-x264_configure = ["--host=aarch64-linux", "--enable-pic"]
+x264_configure = [
+  "--host=aarch64-linux",
+  "--enable-pic",
+  "--extra-cflags=--target=aarch64-linux-ohos --sysroot=${OHOS_SDK}/native/sysroot -D__MUSL__ -march=${CPU_MARCH}",
+  "--extra-ldflags=--target=aarch64-linux-ohos --sysroot=${OHOS_SDK}/native/sysroot",
+]
+env = { CPU_MARCH = "armv8-a", STRIP = "${OHOS_SDK}/native/llvm/bin/llvm-strip" }
 
 [[targets]]
 name = "x86_64-pc-windows-gnu"
