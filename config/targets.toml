@@ -136,6 +136,7 @@ configure = [
   "--target-os=mingw64",
   "--enable-cross-compile",
   "--cross-prefix=aarch64-w64-mingw32-",
+  "--pkg-config=pkg-config",
 ]
 extra_cflags = ""
 extra_ldflags = ""
