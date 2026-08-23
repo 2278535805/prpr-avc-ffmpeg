@@ -98,20 +98,20 @@ configure = [
   "--disable-asm",
   "--disable-x86asm",
   "--disable-stripping",
-  "--cc=${OHOS_SDK}/native/llvm/bin/clang",
-  "--ld=${OHOS_SDK}/native/llvm/bin/clang",
+  "--cc=${OHOS_SDK}/native/llvm/bin/aarch64-linux-ohos-clang",
+  "--ld=${OHOS_SDK}/native/llvm/bin/aarch64-linux-ohos-clang",
   "--ar=${OHOS_SDK}/native/llvm/bin/llvm-ar",
   "--strip=${OHOS_SDK}/native/llvm/bin/llvm-strip",
-  "--extra-cflags=--target=aarch64-linux-ohos --sysroot=${OHOS_SDK}/native/sysroot -D__MUSL__ -march=${CPU_MARCH} -Os -fPIC",
-  "--extra-ldflags=--target=aarch64-linux-ohos --sysroot=${OHOS_SDK}/native/sysroot -fuse-ld=lld",
+  "--extra-cflags=--sysroot=${OHOS_SDK}/native/sysroot -D__MUSL__ -march=${CPU_MARCH} -Os -fPIC",
+  "--extra-ldflags=--sysroot=${OHOS_SDK}/native/sysroot -fuse-ld=lld",
 ]
 extra_cflags = ""
 extra_ldflags = ""
 x264_configure = [
   "--host=aarch64-linux",
   "--enable-pic",
-  "--extra-cflags=--target=aarch64-linux-ohos --sysroot=${OHOS_SDK}/native/sysroot -D__MUSL__ -march=${CPU_MARCH}",
-  "--extra-ldflags=--target=aarch64-linux-ohos --sysroot=${OHOS_SDK}/native/sysroot",
+  "--extra-cflags=--sysroot=${OHOS_SDK}/native/sysroot -D__MUSL__ -march=${CPU_MARCH}",
+  "--extra-ldflags=--sysroot=${OHOS_SDK}/native/sysroot",
 ]
 env = { CPU_MARCH = "armv8-a", STRIP = "${OHOS_SDK}/native/llvm/bin/llvm-strip" }
 
