@@ -87,6 +87,14 @@ def resolve_package_lib(install_dir: Path, x264_install_dir: Path, lib_name: str
     raise SystemExit(f"missing library: {search_dirs[-1] / 'lib' / lib_name}")
 
 
+def to_msys_path(path: Path | str) -> str:
+    s = str(path).replace("\\", "/")
+    if os.name == "nt" and ":" in s:
+        drive, rest = s.split(":", 1)
+        s = f"/{drive.lower()}{rest}"
+    return s
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Build FFmpeg static libs for a target"
@@ -145,12 +153,7 @@ def main() -> int:
     common_flags = expand_list(ffmpeg_cfg.get("configure_common", []), env)
     extra_flags = expand_list(target_cfg.get("extra_configure", []), env)
     
-    prefix_path = str(install_dir)
-    if os.name == "nt":
-        prefix_path = prefix_path.replace("\\", "/")
-        if ":" in prefix_path:
-            drive, path = prefix_path.split(":", 1)
-            prefix_path = f"/{drive.lower()}{path}"
+    prefix_path = to_msys_path(install_dir)
     configure_flags = (
         common_flags + target_flags + extra_flags + [f"--prefix={prefix_path}"]
     )
@@ -166,12 +169,7 @@ def main() -> int:
     if jobs <= 0:
         jobs = os.cpu_count() or 4
 
-    x264_prefix = str(x264_install_dir)
-    if os.name == "nt":
-        x264_prefix = x264_prefix.replace("\\", "/")
-        if ":" in x264_prefix:
-            drive, path = x264_prefix.split(":", 1)
-            x264_prefix = f"/{drive.lower()}{path}"
+    x264_prefix = to_msys_path(x264_install_dir)
     x264_cmd = [
         "./configure",
         "--disable-cli",
@@ -192,7 +190,10 @@ def main() -> int:
     run(["make", "install"], cwd=x264_dir, env=x264_env)
 
     pkgconfig_dir = x264_install_dir / "lib" / "pkgconfig"
-    env["PKG_CONFIG_PATH"] = os.pathsep.join(filter(None, [str(pkgconfig_dir), env.get("PKG_CONFIG_PATH", "")]))
+    # configure runs under an MSYS/POSIX shell whose pkg-config expects
+    # colon-separated POSIX paths, not Windows backslash paths.
+    pkg_config_path = to_msys_path(pkgconfig_dir)
+    env["PKG_CONFIG_PATH"] = ":".join(filter(None, [pkg_config_path, env.get("PKG_CONFIG_PATH", "")]))
 
     configure_cmd = ["./configure", *configure_flags]
     if os.name == "nt":
